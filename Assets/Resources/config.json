@@ -1,0 +1,24 @@
+{
+    "sceneControllerData": {
+        "persistentScenes": ["DeveloperConsole"],
+        "mainmenuScenes": [ "MainMenu" ],
+        "gameplayScenes": ["Gameplay"],
+        "gameoverScenes": ["Gameover"]
+    },
+    "playerData": {
+        "healthPoints": 100.0,
+        "walkSpeed": 2.5,
+        "dashSpeed": 5.0,
+        "score": 0
+    },
+    "gameplayData": {
+        "targetScore": 100,
+        "timeLimitInSeconds": 120,
+        "timeScale": 1
+    },
+    "audioSettings": {
+        "masterVolume": 100,
+        "bgmVolume": 100,
+        "sfxVolume": 100
+    }
+}
