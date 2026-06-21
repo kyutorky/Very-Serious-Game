@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,8 +6,12 @@ public class GameplayUIController : MonoBehaviour
 {
     Main main;
     GameData gameData;
+    [SerializeField] DungBall ball;
     [SerializeField] Button button;
+    [SerializeField] TMP_Text scoreText;
+    [SerializeField] TMP_Text ballStatText;
 
+    Rigidbody2D ballRb;
     void Start()
     {
         main = Main.Instance;
@@ -23,9 +28,24 @@ public class GameplayUIController : MonoBehaviour
         {
             Debug.Log("No Start Button for Main Menu Controller.");
         }
+        ballRb = ball.GetComponent<Rigidbody2D>();
+    }
+    private void Update()
+    {
+        OnUpdateScoreText(gameData.playerData.score);
+        OnUpdateBallStatText();
     }
     public void OnButtonPressed()
     {
-        gameData.playerData.healthPoints -= 50;
+        Main.Instance.OnGameplayLoad(null);
+    }
+    public void OnUpdateScoreText(float value)
+    {
+        scoreText.text = $"{value}";
+    }
+    public void OnUpdateBallStatText()
+    {
+
+        ballStatText.text = $"Ball velocity: {ballRb.linearVelocity.ToString()}";
     }
 }
