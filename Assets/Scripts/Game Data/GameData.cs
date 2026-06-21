@@ -82,6 +82,7 @@ public class GameData
         [SerializeField] public float healthPoints = 0;
         [SerializeField] public float walkSpeed = 0;
         [SerializeField] public float dashSpeed = 0;
+        [SerializeField] public float jumpHeight = 0;
         [SerializeField] public float score = 0;
         public void setHealth(float val) { this.healthPoints = val; }
         public void setWalkSpeed(float val) { this.walkSpeed = val; }

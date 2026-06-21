@@ -29,7 +29,7 @@ public class InGameDevConsole : MonoBehaviour
     }
     private void Update()
     {
-        if (toggleOverlay.IsPressed())
+        if (toggleOverlay.WasPressedThisFrame())
         {
             isDevOverlayOn = !isDevOverlayOn;
             timer += Time.deltaTime;

@@ -486,10 +486,10 @@
                 {
                     "name": "",
                     "id": "bb2496dc-23b1-438d-bdd4-1b520ac40e54",
-                    "path": "<Keyboard>/l",
+                    "path": "<Keyboard>/backslash",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
+                    "groups": "",
                     "action": "DevOverlay",
                     "isComposite": false,
                     "isPartOfComposite": false

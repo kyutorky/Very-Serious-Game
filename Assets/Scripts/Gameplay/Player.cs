@@ -15,8 +15,20 @@ public class Player : MonoBehaviour
 
     [SerializeField] InputAction moveAction;
     [SerializeField] InputAction sprintAction;
+    [SerializeField] InputAction jumpAction;
+
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
+    public LayerMask groundMask;
+    public bool isGrounded = false;
     void Start()
     {
+        Initialize();
+    }
+    private void Initialize()
+    {
+        gameData = Main.Instance.gameData;
+        playerData = gameData.playerData;
         main = Main.Instance;
         camera = main.camera;
         camera.target = transform;
@@ -26,12 +38,7 @@ public class Player : MonoBehaviour
         actionMap.Enable();
         moveAction = actionMap.FindAction("Move");
         sprintAction = actionMap.FindAction("Sprint");
-        Initialize();
-    }
-    private void Initialize()
-    {
-        gameData = Main.Instance.gameData;
-        playerData = gameData.playerData;
+        jumpAction = actionMap.FindAction("Jump");
     }
     void Update()
     {
@@ -48,15 +55,26 @@ public class Player : MonoBehaviour
             animator.SetBool("isWalking", false);
         }
 
-        if (sprintAction.IsPressed())
+        if (sprintAction.IsPressed() && IsGrounded())
         {
             moveValue *= playerData.dashSpeed;
         }
-
-        rb.linearVelocity = moveValue;
+        isGrounded = IsGrounded();
+        if (jumpAction.WasPressedThisFrame() && IsGrounded())
+        {
+            Jump();
+        }
+        rb.linearVelocity = new Vector2(moveValue.x * playerData.walkSpeed, rb.linearVelocityY);
     }
-    void takeDamage(float val)
+    void Jump()
     {
-        gameData.playerData.healthPoints = val;
+        Vector2 velocity = rb.linearVelocity;
+        velocity.y = Mathf.Sqrt(2.0f * 9.81f * playerData.jumpHeight);
+        rb.linearVelocity = velocity;
+        Debug.Log("Player jumped.");
+    }
+    bool IsGrounded()
+    {
+        return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
     }
 }

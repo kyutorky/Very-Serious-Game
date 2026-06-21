@@ -7,8 +7,9 @@
     },
     "playerData": {
         "healthPoints": 100.0,
-        "walkSpeed": 2.5,
-        "dashSpeed": 5.0,
+        "walkSpeed": 6.0,
+        "dashSpeed": 6.0,
+        "jumpHeight": 5.0,
         "score": 0
     },
     "gameplayData": {
