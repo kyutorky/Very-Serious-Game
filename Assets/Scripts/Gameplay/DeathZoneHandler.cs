@@ -1,29 +1,29 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Allows us to restart the level
 
 public class DeathZoneHandler : MonoBehaviour
 {
-    // This runs automatically because "Is Trigger" is enabled on the collider
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Did the player fall through?
-        if (collision.CompareTag("Player"))
+        // Detect if the player or the ball dropped below the level screen boundary
+        if (collision.CompareTag("Player") || collision.CompareTag("Ball"))
         {
-            Debug.Log("Player fell into the pit!");
-            RestartLevel();
-        }
-        
-        // Did the ball fall through?
-        else if (collision.CompareTag("Ball"))
-        {
-            Debug.Log("The ball was dropped!");
-            RestartLevel();
+            Debug.Log($"{collision.gameObject.name} hit the bottom boundary. Loading Game Over screen...");
+            TriggerGameOverTransition();
         }
     }
 
-    void RestartLevel()
+    private void TriggerGameOverTransition()
     {
-        // Instantly reloads the currently active scene
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        if (Main.Instance != null && Main.Instance.gameSceneController != null)
+        {
+            // Bypass the broken OnGameoverLoad check by running the working coroutine directly
+            var controller = Main.Instance.gameSceneController;
+            Main.Instance.StartCoroutine(Main.Instance.TransitionScenes(controller.current, controller.gameoverScenes));
+        }
+        else
+        {
+            // Safety fallback message in case the scene was launched without the core architecture running
+            Debug.LogError("Main.Instance or GameSceneController not found! Cannot route to Game Over scene.");
+        }
     }
 }
