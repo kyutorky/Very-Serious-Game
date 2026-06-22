@@ -6,15 +6,41 @@ public class DungBall : MonoBehaviour
     public float wallCheckRadius = 0.2f;
     public LayerMask wallMask;
     public bool isTouchingWall = false;
-
+    public Rigidbody2D rb;
+    public AudioSource rollingAudio;
+    public AudioSource oneshotAudio;
+    public AudioClip rollingSFX;
+    public AudioClip impactSFX;
+    public AudioClip losepointsSFX;
+    public AudioClip watersplashSFX;
+    [SerializeField] float minSpeed = 0.5f;
     void Start()
     {
-
+        rb = GetComponent<Rigidbody2D>();
+        rollingAudio.clip = rollingSFX;
     }
     void Update()
     {
         isTouchingWall = IsTouchingWall();
+        float speed = rb.linearVelocity.magnitude;
+        //rollingAudio.volume = 1;
+        rollingAudio.volume = Mathf.Clamp01(speed / 40f);
+
+        if (speed > minSpeed)
+        {
+            if (!rollingAudio.isPlaying)
+            {
+                rollingAudio.Play();
+                Debug.Log("Ball is rolling...");
+            }
+
+        }
+        else
+        {
+            rollingAudio.Stop();
+        }
     }
+
 
     bool IsTouchingWall()
     {
@@ -23,5 +49,41 @@ public class DungBall : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log($"Ball Collided with {collision.collider.name}");
+        if (((1 << collision.gameObject.layer) & wallMask) == 0)
+            return;
+
+        float impactSpeed = collision.relativeVelocity.magnitude;
+
+        Debug.Log($"Wall hit at speed: {impactSpeed}");
+
+        if (impactSpeed > 2f)
+        {
+            Main.Instance.gameData.playerData.score -=
+                Mathf.RoundToInt(impactSpeed);
+            oneshotAudio.volume = 0.8f;
+            oneshotAudio.PlayOneShot(impactSFX);
+            OnLosePointsOnImpacet(impactSpeed * 10);
+        }
+
+
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag.Equals("Water"))
+        {
+            OnWaterSplash();
+        }
+    }
+    public void OnLosePointsOnImpacet(float val)
+    {
+        Main.Instance.gameData.playerData.score -= val;
+        oneshotAudio.volume = 0.5f;
+        oneshotAudio.PlayOneShot(losepointsSFX);
+    }
+    public void OnWaterSplash()
+    {
+        oneshotAudio.volume = 1f;
+        oneshotAudio.PlayOneShot(watersplashSFX);
     }
 }

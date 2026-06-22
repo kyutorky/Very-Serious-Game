@@ -6,12 +6,13 @@ public class GameplayUIController : MonoBehaviour
 {
     Main main;
     GameData gameData;
+    [SerializeField] AudioSource audio;
+    [SerializeField] AudioClip clickSFX;
     [SerializeField] DungBall ball;
     [SerializeField] Button button;
     [SerializeField] TMP_Text scoreText;
     [SerializeField] TMP_Text ballStatText;
-
-    Rigidbody2D ballRb;
+    [SerializeField] Rigidbody2D ballRb;
     void Start()
     {
         main = Main.Instance;
@@ -29,6 +30,7 @@ public class GameplayUIController : MonoBehaviour
             Debug.Log("No Start Button for Main Menu Controller.");
         }
         ballRb = ball.GetComponent<Rigidbody2D>();
+        audio.clip = clickSFX;
     }
     private void Update()
     {
@@ -37,6 +39,7 @@ public class GameplayUIController : MonoBehaviour
     }
     public void OnButtonPressed()
     {
+        audio.Play();
         Main.Instance.OnGameplayLoad(null);
     }
     public void OnUpdateScoreText(float value)

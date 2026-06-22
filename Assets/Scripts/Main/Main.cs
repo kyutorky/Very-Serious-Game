@@ -44,7 +44,7 @@ public class Main : MonoBehaviour
     }
     public string OnGameplayLoad(string[] args)
     {
-
+        gameData.playerData.score = 1000;  //temporary
         StartCoroutine(TransitionScenes(gameSceneController.current, gameSceneController.gameplayScenes));
         return "Gameplay loaded";
     }
