@@ -18,7 +18,7 @@ TagManager:
   - Wall
   - Ground
   - Player
-  - Ball
+  - 
   - 
   - 
   - 
@@ -42,6 +42,15 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 3317080621
+    locked: 0
+  - name: Walk in Front
+    uniqueID: 570983159
+    locked: 0
+  - name: Walk Behind
+    uniqueID: 2997314529
     locked: 0
   m_RenderingLayers:
   - Default
