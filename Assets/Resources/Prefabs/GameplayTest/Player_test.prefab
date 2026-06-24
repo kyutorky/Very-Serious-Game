@@ -165,11 +165,16 @@ MonoBehaviour:
     m_Bits: 512
   isGrounded: 0
   ballCheck: {fileID: 5275853977772836097}
-  ballCheckRadius: 0.4
+  ballCheckRadius: 19.37
   ballMask:
     serializedVersion: 2
     m_Bits: 2048
   isNearBall: 0
+  isChargingBall: 0
+  chargeTime: -41.8
+  chargeScale: -63
+  maxChargeTime: -61.3
+  chargeMeter: {fileID: 0}
 --- !u!95 &3724320795913387027
 Animator:
   serializedVersion: 7
