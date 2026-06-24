@@ -13,11 +13,13 @@ public class DungBall : MonoBehaviour
     public AudioClip impactSFX;
     public AudioClip losepointsSFX;
     public AudioClip watersplashSFX;
+    SFXController sfxController;
     [SerializeField] float minSpeed = 0.5f;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rollingAudio.clip = rollingSFX;
+        this.sfxController = Main.Instance.sfxController;
     }
     void Update()
     {
@@ -28,16 +30,16 @@ public class DungBall : MonoBehaviour
 
         if (speed > minSpeed)
         {
-            if (!rollingAudio.isPlaying)
+            if (!sfxController.sources[1].isPlaying)
             {
-                rollingAudio.Play();
+                sfxController.sources[1].Play();
                 Debug.Log("Ball is rolling...");
             }
 
         }
         else
         {
-            rollingAudio.Stop();
+            sfxController.sources[1].Stop();
         }
     }
 
@@ -61,11 +63,8 @@ public class DungBall : MonoBehaviour
             Main.Instance.gameData.playerData.score -=
                 Mathf.RoundToInt(impactSpeed);
             oneshotAudio.volume = 0.8f;
-            oneshotAudio.PlayOneShot(impactSFX);
-            OnLosePointsOnImpacet(impactSpeed * 10);
+            OnLosePointsOnImpact(impactSpeed * 10);
         }
-
-
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -75,15 +74,18 @@ public class DungBall : MonoBehaviour
             OnWaterSplash();
         }
     }
-    public void OnLosePointsOnImpacet(float val)
+    public void OnLosePointsOnImpact(float val)
     {
         Main.Instance.gameData.playerData.score -= val;
-        oneshotAudio.volume = 0.5f;
-        oneshotAudio.PlayOneShot(losepointsSFX);
+        //oneshotAudio.volume = 0.5f;
+        //oneshotAudio.PlayOneShot(losepointsSFX);
+        sfxController.sources[3].Play();
     }
     public void OnWaterSplash()
     {
-        oneshotAudio.volume = 1f;
-        oneshotAudio.PlayOneShot(watersplashSFX);
+        Main.Instance.gameData.playerData.score -= 100;
+        //oneshotAudio.volume = 1f;
+        //oneshotAudio.PlayOneShot(watersplashSFX);
+        sfxController.sources[5].Play();
     }
 }

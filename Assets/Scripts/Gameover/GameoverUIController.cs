@@ -29,7 +29,7 @@ public class GameoverUIController : MonoBehaviour
 
     public void OnButtonPressed()
     {
-        audio.Play();
+        Main.Instance.sfxController.sources[4].Play();
         Main.Instance.OnGameplayLoad(null);
     }
 }

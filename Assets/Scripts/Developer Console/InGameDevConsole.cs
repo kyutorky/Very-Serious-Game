@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class InGameDevConsole : MonoBehaviour
 {
@@ -16,8 +18,12 @@ public class InGameDevConsole : MonoBehaviour
     [SerializeField] TMP_Text outputField;
     [SerializeField] TMP_Text gameDataDisplay;
     [SerializeField] TMP_Text overlay;
+    [SerializeField] GameObject sfxPanel;
+    [SerializeField] GameObject sfxSliderPrefab;
+    [SerializeField] List<Slider> sfxSliders;
     DevCommandRegistry cmdRegistry;
     GameData gameData;
+    SFXController sfxController;
     public Action<string> gameDataDisplayText;
     public bool isDataDisplayOn = false;
 
@@ -25,7 +31,8 @@ public class InGameDevConsole : MonoBehaviour
     float delay = 2f;
     void Start()
     {
-        Initialize(Main.Instance.cmdRegistry, Main.Instance.gameData);
+        Initialize(Main.Instance.cmdRegistry, Main.Instance.gameData, Main.Instance.sfxController);
+
     }
     private void Update()
     {
@@ -58,6 +65,7 @@ public class InGameDevConsole : MonoBehaviour
                 gameDataDisplay.gameObject.transform.parent.gameObject.SetActive(isDataDisplayOn);
                 gameDataDisplay.text = "";
             }
+            ReadSFXSliderValues();
         }
         else
         {
@@ -66,10 +74,11 @@ public class InGameDevConsole : MonoBehaviour
             canvasGroup.blocksRaycasts = false;
         }
     }
-    public void Initialize(DevCommandRegistry cmdRegistry, GameData gameData)
+    public void Initialize(DevCommandRegistry cmdRegistry, GameData gameData, SFXController sfxController)
     {
         this.cmdRegistry = cmdRegistry;
         this.gameData = gameData;
+        this.sfxController = sfxController;
         cmdRegistry.AddCommand(new DevCommand("Show data display", "showdata", OnDataDisplayToggle));
         inputField.onSelect.AddListener(OnEnterCommand);
         inputField.onSubmit.AddListener(OnSubmitCommand);
@@ -77,6 +86,7 @@ public class InGameDevConsole : MonoBehaviour
         actionMap = actionAsset.FindActionMap("Player");
         toggleOverlay = actionMap.FindAction("DevOverlay");
         canvasGroup = GetComponent<CanvasGroup>();
+        RenderSFXPanel();
     }
     public void OnEnterCommand(string c)
     {
@@ -127,6 +137,42 @@ public class InGameDevConsole : MonoBehaviour
         {
             fpsCount = (int)(1f / Time.unscaledDeltaTime);
             yield return new WaitForSeconds(.1f);
+        }
+    }
+
+    public void RenderSFXPanel()
+    {
+        if (sfxPanel == null)
+        {
+            Debug.Log("No panel assigned for SFX");
+            return;
+        }
+
+        for (int i = 0; i < sfxController.sources.Count; i++)
+        {
+            GameObject slider = GameObject.Instantiate(sfxSliderPrefab);
+            if (slider == null)
+            {
+                Debug.Log("SFX slider is null");
+            }
+            slider.transform.SetParent(sfxPanel.transform, false);
+            slider.transform.localPosition = new Vector3(0, -i * 30 - 20, 0);
+            sfxSliders.Add(slider.GetComponent<Slider>());
+        }
+    }
+    public void ReadSFXSliderValues()
+    {
+        List<AudioSource> sources = Main.Instance.sfxController.sources;
+        if (sfxSliders.Count == 0)
+        {
+            Debug.Log("No slider values to read.");
+            return;
+        }
+        for (int i = 0; i < sfxSliders.Count; i++)
+        {
+            sources[i].volume = sfxSliders[i].value;
+            sfxSliders[i].transform.GetComponent<TMP_Text>().text = $"\n{sources[i].name}: {(float)Math.Truncate(sources[i].volume * 100f) / 100f}";
+
         }
     }
 }

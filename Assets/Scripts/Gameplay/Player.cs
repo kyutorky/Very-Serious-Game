@@ -14,24 +14,18 @@ public class Player : MonoBehaviour
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator animator;
     [SerializeField] DungBall ball;
+
     [SerializeField] InputAction moveAction;
     [SerializeField] InputAction sprintAction;
     [SerializeField] InputAction jumpAction;
     [SerializeField] InputAction chargeAction;
 
-
     [SerializeField] Transform groundCheck;
-
     [SerializeField] float groundCheckRadius;
-
     [SerializeField] LayerMask groundMask;
-
     [SerializeField] bool isGrounded = false;
-
     [SerializeField] Transform ballCheck;
-
     [SerializeField] float ballCheckRadius;
-
     [SerializeField] LayerMask ballMask;
 
     [SerializeField] bool isNearBall = false;
@@ -40,7 +34,7 @@ public class Player : MonoBehaviour
     [SerializeField] float chargeScale;
     [SerializeField] float maxChargeTime;
     [SerializeField] GameObject chargeMeter;
-
+    float chargeCooldown = 1.0f;
     void Start()
     {
         Initialize();
@@ -67,7 +61,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
-        Debug.Log(moveValue);
+
         if (moveValue != Vector2.zero)
         {
             animator.SetBool("isWalking", true);
@@ -84,7 +78,6 @@ public class Player : MonoBehaviour
             moveValue *= playerData.dashSpeed;
         }
 
-        chargeTime += Time.deltaTime;
         //isGrounded = IsGrounded();
         //isNearBall = IsNearBall();
         if (isChargingBall)
@@ -110,16 +103,14 @@ public class Player : MonoBehaviour
     }
     void OnChargeBall(InputAction.CallbackContext context)
     {
-        if (!IsNearBall() || !IsGrounded())
-            return;
+        if (!IsNearBall() || !IsGrounded()) return;
         moveAction.Disable();
         isChargingBall = true;
         Debug.Log("Charging ball..." + context);
     }
     void OnReleaseBall(InputAction.CallbackContext context)
     {
-        if (!isChargingBall)
-            return;
+        if (!isChargingBall) return;
         isChargingBall = false;
         moveAction.Enable();
         float side = Mathf.Sign(transform.position.x - ball.transform.position.x);
@@ -134,7 +125,6 @@ public class Player : MonoBehaviour
         Vector2 velocity = rb.linearVelocity;
         velocity.y = Mathf.Sqrt(2.0f * 9.81f * playerData.jumpHeight);
         rb.linearVelocity = velocity;
-        Debug.Log("Player jumped.");
     }
     bool IsGrounded()
     {
@@ -176,6 +166,11 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireSphere(ballCheck.position, ballCheckRadius);
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+    }
+    private void OnDestroy()
+    {
+        chargeAction.started -= OnChargeBall;
+        chargeAction.canceled -= OnReleaseBall;
     }
 }
 

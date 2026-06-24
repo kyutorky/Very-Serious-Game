@@ -39,7 +39,7 @@ public class GameplayUIController : MonoBehaviour
     }
     public void OnButtonPressed()
     {
-        audio.Play();
+        Main.Instance.sfxController.sources[4].Play();
         Main.Instance.OnGameplayLoad(null);
     }
     public void OnUpdateScoreText(float value)

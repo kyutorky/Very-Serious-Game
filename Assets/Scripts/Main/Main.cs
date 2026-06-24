@@ -7,6 +7,8 @@ public class Main : MonoBehaviour
     public static Main Instance { get; private set; }
     [SerializeField] public CameraFollow camera;
     [SerializeField] public GameSceneController gameSceneController;
+    [SerializeField] public SFXController sfxController;
+    [SerializeField] GameObject sfxSourcesGO;
     public DevCommandRegistry cmdRegistry;
     public InGameDevConsole devConsole;
     [SerializeField] public GameData gameData;
@@ -28,6 +30,7 @@ public class Main : MonoBehaviour
             gameData.Initialize(cmdRegistry);
 
             gameSceneController = new GameSceneController();
+            sfxController = new SFXController(sfxSourcesGO);
             gameSceneController.Initialize(gameData);
             StartCoroutine(gameSceneController.LoadScenes(new List<string>(), gameSceneController.persistentScenes));
             StartCoroutine(gameSceneController.LoadScenes(new List<string>(), gameSceneController.mainmenuScenes));
@@ -44,6 +47,7 @@ public class Main : MonoBehaviour
     }
     public string OnGameplayLoad(string[] args)
     {
+
         gameData.playerData.score = 1000;  //temporary
         StartCoroutine(TransitionScenes(gameSceneController.current, gameSceneController.gameplayScenes));
         return "Gameplay loaded";

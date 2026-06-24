@@ -24,6 +24,7 @@ public class MainMenuController : MonoBehaviour
     }
     public void OnStartGamePressed()
     {
+        Main.Instance.sfxController.sources[4].Play();
         main.OnGameplayLoad(null);
         Debug.Log("Start Button pressed.");
     }
