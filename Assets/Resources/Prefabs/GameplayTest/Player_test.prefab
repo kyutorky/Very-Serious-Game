@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3590052146071586536}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3949249537063586204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5275853977772836097}
+  m_Layer: 10
+  m_Name: BallCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5275853977772836097
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3949249537063586204}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3590052146071586536}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4934088022169737946
 GameObject:
   m_ObjectHideFlags: 0
@@ -47,7 +78,7 @@ GameObject:
   - component: {fileID: 8174195313799459784}
   m_Layer: 10
   m_Name: Player_test
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -66,6 +97,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 834098747084165485}
+  - {fileID: 5275853977772836097}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7275744708619701260
@@ -89,6 +121,7 @@ MonoBehaviour:
     m_Bindings: []
   rb: {fileID: 0}
   animator: {fileID: 0}
+  ball: {fileID: 0}
   moveAction:
     m_Name: Move
     m_Type: 0
@@ -116,12 +149,27 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+  chargeAction:
+    m_Name: Charge
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 5f804cb5-5468-43c0-b9d5-5c35b23dfb89
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   groundCheck: {fileID: 834098747084165485}
   groundCheckRadius: 0.2
   groundMask:
     serializedVersion: 2
     m_Bits: 512
   isGrounded: 0
+  ballCheck: {fileID: 5275853977772836097}
+  ballCheckRadius: 0.4
+  ballMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  isNearBall: 0
 --- !u!95 &3724320795913387027
 Animator:
   serializedVersion: 7
