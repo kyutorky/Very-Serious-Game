@@ -7,18 +7,12 @@ public class DungBall : MonoBehaviour
     public LayerMask wallMask;
     public bool isTouchingWall = false;
     public Rigidbody2D rb;
-    public AudioSource rollingAudio;
-    public AudioSource oneshotAudio;
-    public AudioClip rollingSFX;
-    public AudioClip impactSFX;
-    public AudioClip losepointsSFX;
-    public AudioClip watersplashSFX;
     SFXController sfxController;
     [SerializeField] float minSpeed = 0.5f;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rollingAudio.clip = rollingSFX;
+
         this.sfxController = Main.Instance.sfxController;
     }
     void Update()
@@ -26,7 +20,7 @@ public class DungBall : MonoBehaviour
         isTouchingWall = IsTouchingWall();
         float speed = rb.linearVelocity.magnitude;
         //rollingAudio.volume = 1;
-        rollingAudio.volume = Mathf.Clamp01(speed / 40f);
+        // rollingAudio.volume = Mathf.Clamp01(speed / 40f);
 
         if (speed > minSpeed)
         {
@@ -62,7 +56,7 @@ public class DungBall : MonoBehaviour
         {
             Main.Instance.gameData.playerData.score -=
                 Mathf.RoundToInt(impactSpeed);
-            oneshotAudio.volume = 0.8f;
+            sfxController.sources[2].Play();
             OnLosePointsOnImpact(impactSpeed * 10);
         }
     }
