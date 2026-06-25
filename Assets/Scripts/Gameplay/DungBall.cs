@@ -9,9 +9,11 @@ public class DungBall : MonoBehaviour
     public Rigidbody2D rb;
     SFXController sfxController;
     [SerializeField] float minSpeed = 0.5f;
+    [SerializeField] Animator animator;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
 
         this.sfxController = Main.Instance.sfxController;
     }
@@ -19,6 +21,11 @@ public class DungBall : MonoBehaviour
     {
         isTouchingWall = IsTouchingWall();
         float speed = rb.linearVelocity.magnitude;
+        if (animator != null)
+        {
+            animator.speed = speed > minSpeed ? speed * 0.2f : 0f;
+        }
+
         //rollingAudio.volume = 1;
         // rollingAudio.volume = Mathf.Clamp01(speed / 40f);
 
