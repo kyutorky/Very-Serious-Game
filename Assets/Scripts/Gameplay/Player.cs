@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     [SerializeField] InputAction sprintAction;
     [SerializeField] InputAction jumpAction;
     [SerializeField] InputAction chargeAction;
+    [SerializeField] InputAction aimAction;
 
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundCheckRadius;
@@ -34,7 +35,15 @@ public class Player : MonoBehaviour
     [SerializeField] float chargeScale;
     [SerializeField] float maxChargeTime;
     [SerializeField] GameObject chargeMeter;
-    float chargeCooldown = 1.0f;
+    [SerializeField] Vector2 aimVector;
+    float aimVectorAngleWithWorldPosAxisX;
+    Vector2 aimVectorClamped;
+    Vector2 aimVectorNorm;
+    Vector2 aimVectorNormScaled;
+    Vector2 finalAimVector;
+    [SerializeField] float aimRadius;
+
+
     void Start()
     {
         Initialize();
@@ -54,6 +63,7 @@ public class Player : MonoBehaviour
         sprintAction = actionMap.FindAction("Sprint");
         jumpAction = actionMap.FindAction("Jump");
         chargeAction = actionMap.FindAction("Charge");
+        aimAction = actionMap.FindAction("Aim");
 
         chargeAction.started += OnChargeBall;
         chargeAction.canceled += OnReleaseBall;
@@ -83,9 +93,11 @@ public class Player : MonoBehaviour
         if (isChargingBall)
         {
             ball.rb.linearVelocity = Vector2.zero;
+            ball.transform.position = transform.position + new Vector3(finalAimVector.x, finalAimVector.y);
             chargeTime += Time.deltaTime;
             chargeTime = Mathf.Clamp(chargeTime, 0f, maxChargeTime);
             Debug.Log("Charge time: " + chargeTime);
+            CalculateAimVector();
         }
         else
         {
@@ -113,10 +125,10 @@ public class Player : MonoBehaviour
         if (!isChargingBall) return;
         isChargingBall = false;
         moveAction.Enable();
-        float side = Mathf.Sign(transform.position.x - ball.transform.position.x);
-        Vector2 dir = new Vector2(side, 0.3f).normalized;
 
-        ball.rb.linearVelocity = -dir * chargeTime * chargeScale;
+
+        //ball.rb.linearVelocity = finalAimVector * chargeTime * chargeScale;
+        ball.rb.AddForce(finalAimVector * chargeTime * chargeScale);
         chargeTime = 0;
         Debug.Log("Ball Launced..." + context);
     }
@@ -160,8 +172,29 @@ public class Player : MonoBehaviour
             return Color.Lerp(yellow, red, (t - 0.5f) * 2f);
         }
     }
+
+    public void CalculateAimVector()
+    {
+        Vector2 pos = aimAction.ReadValue<Vector2>();
+        aimVector = pos - new Vector2(transform.position.x, transform.position.y);
+        aimVectorNorm = Vector2.Normalize(aimVector);
+        aimVectorAngleWithWorldPosAxisX = (Mathf.Atan2(aimVectorNorm.y, Vector2.right.x)) * 180 / Mathf.PI;
+        aimVectorClamped = new Vector2(aimVectorNorm.x, Mathf.Clamp(aimVectorNorm.y, 0.25f, 1));
+        finalAimVector = aimVectorClamped * aimRadius;
+
+        Debug.Log("Mouse Position: " + pos + "Aim Vector: " + pos + "Aim Vector Angle: " + aimVectorAngleWithWorldPosAxisX);
+
+    }
+
     private void OnDrawGizmos()
     {
+
+        if (isChargingBall)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, transform.position + new Vector3(finalAimVector.x, finalAimVector.y));
+        }
+
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(ballCheck.position, ballCheckRadius);
         Gizmos.color = Color.green;
