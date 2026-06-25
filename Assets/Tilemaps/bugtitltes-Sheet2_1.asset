@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: Triangle
+  m_Name: bugtitltes-Sheet2_1
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.Tilemaps.Tile
-  m_Sprite: {fileID: 7482667652216324306, guid: e7092200283124747b5c804da87262d0, type: 3}
-  m_Color: {r: 0.85098046, g: 0.627451, b: 0.40000004, a: 1}
+  m_Sprite: {fileID: -1487112898001663540, guid: 11fe90e7286899548b6c9ae561c56117, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
     e01: 0
