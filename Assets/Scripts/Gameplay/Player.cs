@@ -43,7 +43,6 @@ public class Player : MonoBehaviour
     Vector2 finalAimVector;
     [SerializeField] float aimRadius;
 
-
     void Start()
     {
         Initialize();
@@ -127,7 +126,7 @@ public class Player : MonoBehaviour
         moveAction.Enable();
 
 
-        //ball.rb.linearVelocity = finalAimVector * chargeTime * chargeScale;
+        ball.rb.linearVelocity = finalAimVector * chargeTime * chargeScale;
         ball.rb.AddForce(finalAimVector * chargeTime * chargeScale);
         chargeTime = 0;
         Debug.Log("Ball Launced..." + context);
