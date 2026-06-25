@@ -47,7 +47,7 @@ public class LevelCheckpoint2D : MonoBehaviour
             if (ball.rb != null) ball.rb.linearVelocity = Vector2.zero;
             
             // Offset the ball slightly so it doesn't spawn exactly inside the player
-            ball.transform.position = nextLevelSpawnPoint + new Vector3(1.5f, 0f, 0f);
+            ball.transform.position = nextLevelSpawnPoint + new Vector3(3.5f, 0f, 0f);
         }
 
         Debug.Log("Player and Ball successfully teleported to the next level area.");
