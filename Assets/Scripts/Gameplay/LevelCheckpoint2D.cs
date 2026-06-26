@@ -37,7 +37,7 @@ public class LevelCheckpoint2D : MonoBehaviour
             // Reset velocity to prevent carrying momentum over, then move
             Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
             if (playerRb != null) playerRb.linearVelocity = Vector2.zero;
-            
+
             player.transform.position = nextLevelSpawnPoint;
         }
 
@@ -45,7 +45,7 @@ public class LevelCheckpoint2D : MonoBehaviour
         {
             // Reset velocity so the ball drops statically at the start of the next section
             if (ball.rb != null) ball.rb.linearVelocity = Vector2.zero;
-            
+
             // Offset the ball slightly so it doesn't spawn exactly inside the player
             ball.transform.position = nextLevelSpawnPoint + new Vector3(3.5f, 0f, 0f);
         }
