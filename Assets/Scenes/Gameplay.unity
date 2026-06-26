@@ -11276,7 +11276,7 @@ Canvas:
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
-  m_PixelPerfect: 0
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -51319,7 +51319,7 @@ PrefabInstance:
       objectReference: {fileID: 1090436926}
     - target: {fileID: 7275744708619701260, guid: 190358d0761c77a49b66c0caca015da9, type: 3}
       propertyPath: aimRadius
-      value: 3
+      value: 2.3
       objectReference: {fileID: 0}
     - target: {fileID: 7275744708619701260, guid: 190358d0761c77a49b66c0caca015da9, type: 3}
       propertyPath: chargeTime
