@@ -572,37 +572,6 @@ MonoBehaviour:
   smoothSpeed: 10
   zOffset: -10
   offset: {x: 0, y: 0, z: -10}
---- !u!1 &809657830
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 809657831}
-  m_Layer: 0
-  m_Name: VFXSource
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &809657831
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 809657830}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &927218577
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,7 +615,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: eed0f9ebfeb3e1041bc524c1203284a4, type: 3}
+  m_Resource: {fileID: 8300000, guid: 0947dca952600154492b8369965503f6, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.4
   m_Pitch: 1
@@ -1351,4 +1320,3 @@ SceneRoots:
   - {fileID: 143147086}
   - {fileID: 23621862}
   - {fileID: 1022918284}
-  - {fileID: 809657831}
