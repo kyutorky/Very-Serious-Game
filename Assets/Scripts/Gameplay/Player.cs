@@ -28,8 +28,6 @@ public class Player : MonoBehaviour
     [SerializeField] float dashSpeedOverride = 12f;
     [SerializeField] float jumpHeightOverride = 5f;
 
-
-
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundCheckRadius;
     [SerializeField] LayerMask groundMask;
@@ -39,8 +37,8 @@ public class Player : MonoBehaviour
     [SerializeField] LayerMask ballMask;
 
     [SerializeField] bool isNearBall = false;
-    [SerializeField] bool isChargingBall = false;
-    [SerializeField] float chargeTime = 0;
+    [SerializeField] public bool isChargingBall = false;
+    [SerializeField] public float chargeTime = 0;
     [SerializeField] float chargeScale;
     [SerializeField] float maxChargeTime;
     [SerializeField] GameObject chargeMeter;
@@ -91,11 +89,11 @@ public class Player : MonoBehaviour
             animator.SetBool("isWalking", false);
         }
 
-    
+
         if (sprintAction.IsPressed())   //added by white to allow player dash movement to work in the air
         {
             // This allows you to maintain or initiate dash multipliers while in the air!
-            moveValue.x *= 1f; 
+            moveValue.x *= 1f;
         }
 
 
@@ -112,6 +110,7 @@ public class Player : MonoBehaviour
         //isNearBall = IsNearBall();
         if (isChargingBall)
         {
+            ball.animator.speed = chargeTime;
             ball.rb.linearVelocity = Vector2.zero;
             ball.transform.position = transform.position + new Vector3(finalAimVector.x, finalAimVector.y);
             chargeTime += Time.deltaTime;
@@ -145,7 +144,7 @@ public class Player : MonoBehaviour
     }
     void OnChargeBall(InputAction.CallbackContext context)
     {
-        if (!IsNearBall() || !IsGrounded()) return;
+        if (!IsNearBall() || !IsGrounded() || !ball.IsGrounded()) return;
         moveAction.Disable();
         isChargingBall = true;
         Debug.Log("Charging ball..." + context);
@@ -166,10 +165,10 @@ public class Player : MonoBehaviour
     void Jump()
     {
         Vector2 velocity = rb.linearVelocity;
-        
+
         // Choose between inspector value or configuration data
         float currentJumpHeight = useInspectorValues ? jumpHeightOverride : (playerData != null ? playerData.jumpHeight : jumpHeightOverride);
-        
+
         velocity.y = Mathf.Sqrt(2.0f * 9.81f * currentJumpHeight);
         rb.linearVelocity = velocity;
     }

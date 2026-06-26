@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class DungBall : MonoBehaviour
 {
+    [SerializeField] Player player;
     public Transform wallCheck;
     public float wallCheckRadius = 0.2f;
     public LayerMask wallMask;
@@ -9,43 +10,63 @@ public class DungBall : MonoBehaviour
     public Rigidbody2D rb;
     SFXController sfxController;
     [SerializeField] float minSpeed = 0.5f;
-    [SerializeField] Animator animator;
+    [SerializeField] public Animator animator;
+    [SerializeField] ParticleSystem vfxImpact;
+    [SerializeField] ParticleSystem vfxRolling;
+    [SerializeField] ParticleSystem vfxWaterSplash;
+
+    [SerializeField] Transform groundCheck;
+    [SerializeField] float groundCheckRadius;
+    [SerializeField] LayerMask groundMask;
+    [SerializeField] bool isGrounded = false;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-
+        vfxImpact.Pause();
         this.sfxController = Main.Instance.sfxController;
     }
     void Update()
     {
         isTouchingWall = IsTouchingWall();
+        isGrounded = IsGrounded();
         float speed = rb.linearVelocity.magnitude;
         if (animator != null)
         {
-            animator.speed = speed > minSpeed ? speed * 0.2f : 0f;
+            if (player.isChargingBall)
+            {
+                animator.speed = player.chargeTime * 1.2f;
+            }
+            else
+            {
+                animator.speed = speed > minSpeed ? speed * 0.2f : 0f;
+            }
         }
 
-        //rollingAudio.volume = 1;
-        // rollingAudio.volume = Mathf.Clamp01(speed / 40f);
-
-        if (speed > minSpeed)
+        if (speed > minSpeed && IsGrounded())
         {
+
             if (!sfxController.sources[1].isPlaying)
             {
                 sfxController.sources[1].Play();
                 Debug.Log("Ball is rolling...");
+                vfxRolling.Play();
+
             }
 
         }
         else
         {
             sfxController.sources[1].Stop();
+            vfxRolling.Stop();
         }
     }
+    public bool IsGrounded()
+    {
+        return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
+    }
 
-
-    bool IsTouchingWall()
+    public bool IsTouchingWall()
     {
         return Physics2D.OverlapCircle(wallCheck.position, wallCheckRadius, wallMask);
     }
@@ -78,15 +99,13 @@ public class DungBall : MonoBehaviour
     public void OnLosePointsOnImpact(float val)
     {
         Main.Instance.gameData.playerData.score -= val;
-        //oneshotAudio.volume = 0.5f;
-        //oneshotAudio.PlayOneShot(losepointsSFX);
         sfxController.sources[3].Play();
+        vfxImpact.Emit(30);
     }
     public void OnWaterSplash()
     {
         Main.Instance.gameData.playerData.score -= 100;
-        //oneshotAudio.volume = 1f;
-        //oneshotAudio.PlayOneShot(watersplashSFX);
         sfxController.sources[5].Play();
+        vfxWaterSplash.Emit(10);
     }
 }
