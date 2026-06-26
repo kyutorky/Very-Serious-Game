@@ -21,6 +21,15 @@ public class Player : MonoBehaviour
     [SerializeField] InputAction chargeAction;
     [SerializeField] InputAction aimAction;
 
+
+    //added by white so we can edit values in the inspector
+    [SerializeField] bool useInspectorValues = false;
+    [SerializeField] float walkSpeedOverride = 6f;
+    [SerializeField] float dashSpeedOverride = 12f;
+    [SerializeField] float jumpHeightOverride = 5f;
+
+
+
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundCheckRadius;
     [SerializeField] LayerMask groundMask;
@@ -82,10 +91,22 @@ public class Player : MonoBehaviour
             animator.SetBool("isWalking", false);
         }
 
-        if (sprintAction.IsPressed() && IsGrounded())
+    
+        if (sprintAction.IsPressed())   //added by white to allow player dash movement to work in the air
         {
-            moveValue *= playerData.dashSpeed;
+            // This allows you to maintain or initiate dash multipliers while in the air!
+            moveValue.x *= 1f; 
         }
+
+
+
+
+        //if (sprintAction.IsPressed() && IsGrounded())
+        //{
+        //    moveValue *= playerData.dashSpeed;
+        //}
+
+
 
         //isGrounded = IsGrounded();
         //isNearBall = IsNearBall();
@@ -110,7 +131,17 @@ public class Player : MonoBehaviour
             Jump();
         }
 
-        rb.linearVelocity = new Vector2(moveValue.x * playerData.walkSpeed, rb.linearVelocityY);
+        //rb.linearVelocity = new Vector2(moveValue.x * playerData.walkSpeed, rb.linearVelocityY);
+
+
+        float finalWalk = useInspectorValues ? walkSpeedOverride : (playerData != null ? playerData.walkSpeed : walkSpeedOverride);
+        float finalDash = useInspectorValues ? dashSpeedOverride : (playerData != null ? playerData.dashSpeed : dashSpeedOverride);
+        float currentMoveSpeed = sprintAction.IsPressed() ? finalDash : finalWalk;
+
+        rb.linearVelocity = new Vector2(moveValue.x * currentMoveSpeed, rb.linearVelocityY);
+
+
+
     }
     void OnChargeBall(InputAction.CallbackContext context)
     {
@@ -131,12 +162,27 @@ public class Player : MonoBehaviour
         chargeTime = 0;
         Debug.Log("Ball Launced..." + context);
     }
+
     void Jump()
     {
         Vector2 velocity = rb.linearVelocity;
-        velocity.y = Mathf.Sqrt(2.0f * 9.81f * playerData.jumpHeight);
+        
+        // Choose between inspector value or configuration data
+        float currentJumpHeight = useInspectorValues ? jumpHeightOverride : (playerData != null ? playerData.jumpHeight : jumpHeightOverride);
+        
+        velocity.y = Mathf.Sqrt(2.0f * 9.81f * currentJumpHeight);
         rb.linearVelocity = velocity;
     }
+
+
+
+    //void Jump()
+    //{
+    //    Vector2 velocity = rb.linearVelocity;
+    //    velocity.y = Mathf.Sqrt(2.0f * 9.81f * playerData.jumpHeight);
+    //    rb.linearVelocity = velocity;
+    //}
+
     bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
