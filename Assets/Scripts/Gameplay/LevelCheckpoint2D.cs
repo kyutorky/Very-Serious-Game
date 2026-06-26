@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class LevelCheckpoint2D : MonoBehaviour
 {
+    [SerializeField] bool isFinalCheckpoint;
+    [SerializeField] bool isGameOver;
     [Header("Teleport Destination")]
     [Tooltip("The position where the player and ball will be sent in the next level section.")]
     public Vector3 nextLevelSpawnPoint;
@@ -22,8 +24,18 @@ public class LevelCheckpoint2D : MonoBehaviour
 
         if (isPlayerHere && isBallHere)
         {
-            TeleportToNextLevel();
+            if (!isFinalCheckpoint)
+            {
+                TeleportToNextLevel();
+            }
+            else if (!isGameOver)
+            {
+                isGameOver = true;
+                Main.Instance.sfxController.sources[8].PlayOneShot(Main.Instance.sfxController.sources[8].clip);
+                LevelWin();
+            }
         }
+
     }
 
     private void TeleportToNextLevel()
@@ -51,6 +63,12 @@ public class LevelCheckpoint2D : MonoBehaviour
         }
 
         Debug.Log("Player and Ball successfully teleported to the next level area.");
+    }
+    private void LevelWin()
+    {
+        var controller = Main.Instance.gameSceneController;
+
+        Main.Instance.StartCoroutine(Main.Instance.TransitionScenes(controller.current, controller.gameoverScenes));
     }
 
     private void OnDrawGizmos()

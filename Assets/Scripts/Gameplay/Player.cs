@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     Main main;
     GameData gameData;
     GameData.PlayerData playerData;
+    SFXController sfxController;
     [SerializeField] InputActionAsset actions;
     [SerializeField] InputActionMap actionMap;
 
@@ -63,6 +64,7 @@ public class Player : MonoBehaviour
         camera.target = transform;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        this.sfxController = Main.Instance.sfxController;
         actionMap = actions.FindActionMap("Player");
         actionMap.Enable();
         moveAction = actionMap.FindAction("Move");
@@ -76,6 +78,7 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        playerData.score = Mathf.Clamp(playerData.score, 0, 10000);
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
 
         if (moveValue != Vector2.zero)
@@ -88,26 +91,11 @@ public class Player : MonoBehaviour
         {
             animator.SetBool("isWalking", false);
         }
-
-
         if (sprintAction.IsPressed())   //added by white to allow player dash movement to work in the air
         {
             // This allows you to maintain or initiate dash multipliers while in the air!
             moveValue.x *= 1f;
         }
-
-
-
-
-        //if (sprintAction.IsPressed() && IsGrounded())
-        //{
-        //    moveValue *= playerData.dashSpeed;
-        //}
-
-
-
-        //isGrounded = IsGrounded();
-        //isNearBall = IsNearBall();
         if (isChargingBall)
         {
             ball.animator.speed = chargeTime;
@@ -117,6 +105,10 @@ public class Player : MonoBehaviour
             chargeTime = Mathf.Clamp(chargeTime, 0f, maxChargeTime);
             Debug.Log("Charge time: " + chargeTime);
             CalculateAimVector();
+            if (chargeTime >= maxChargeTime & sfxController.sources[6].isPlaying)
+            {
+                sfxController.sources[6].PlayDelayed(4);
+            }
         }
         else
         {
@@ -130,23 +122,18 @@ public class Player : MonoBehaviour
             Jump();
         }
 
-        //rb.linearVelocity = new Vector2(moveValue.x * playerData.walkSpeed, rb.linearVelocityY);
-
-
         float finalWalk = useInspectorValues ? walkSpeedOverride : (playerData != null ? playerData.walkSpeed : walkSpeedOverride);
         float finalDash = useInspectorValues ? dashSpeedOverride : (playerData != null ? playerData.dashSpeed : dashSpeedOverride);
         float currentMoveSpeed = sprintAction.IsPressed() ? finalDash : finalWalk;
 
         rb.linearVelocity = new Vector2(moveValue.x * currentMoveSpeed, rb.linearVelocityY);
-
-
-
     }
     void OnChargeBall(InputAction.CallbackContext context)
     {
         if (!IsNearBall() || !IsGrounded() || !ball.IsGrounded()) return;
         moveAction.Disable();
         isChargingBall = true;
+        sfxController.sources[6].Play();
         Debug.Log("Charging ball..." + context);
     }
     void OnReleaseBall(InputAction.CallbackContext context)
@@ -154,14 +141,13 @@ public class Player : MonoBehaviour
         if (!isChargingBall) return;
         isChargingBall = false;
         moveAction.Enable();
-
-
+        sfxController.sources[6].Stop();
+        sfxController.sources[7].PlayOneShot(sfxController.sources[7].clip);
         ball.rb.linearVelocity = finalAimVector * chargeTime * chargeScale;
         ball.rb.AddForce(finalAimVector * chargeTime * chargeScale);
         chargeTime = 0;
         Debug.Log("Ball Launced..." + context);
     }
-
     void Jump()
     {
         Vector2 velocity = rb.linearVelocity;
@@ -172,16 +158,6 @@ public class Player : MonoBehaviour
         velocity.y = Mathf.Sqrt(2.0f * 9.81f * currentJumpHeight);
         rb.linearVelocity = velocity;
     }
-
-
-
-    //void Jump()
-    //{
-    //    Vector2 velocity = rb.linearVelocity;
-    //    velocity.y = Mathf.Sqrt(2.0f * 9.81f * playerData.jumpHeight);
-    //    rb.linearVelocity = velocity;
-    //}
-
     bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
@@ -229,7 +205,6 @@ public class Player : MonoBehaviour
         Debug.Log("Mouse Position: " + pos + "Aim Vector: " + pos + "Aim Vector Angle: " + aimVectorAngleWithWorldPosAxisX);
 
     }
-
     private void OnDrawGizmos()
     {
 

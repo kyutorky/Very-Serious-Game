@@ -452,7 +452,9 @@ MonoBehaviour:
   overlay: {fileID: 2082555401}
   sfxPanel: {fileID: 1930385565}
   sfxSliderPrefab: {fileID: 3462873863298181244, guid: e3b7ae649b8267748937e6830e44f030, type: 3}
+  sfxButtonPrefab: {fileID: 8647187996190080087, guid: 597336fdd71344646b53236a475ed103, type: 3}
   sfxSliders: []
+  sfxButtons: []
   isDataDisplayOn: 0
 --- !u!4 &1200295952
 Transform:
@@ -1292,8 +1294,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 324, y: 139}
-  m_SizeDelta: {x: 130, y: 200}
+  m_AnchoredPosition: {x: 293.1, y: 154}
+  m_SizeDelta: {x: 200, y: 400}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1930385567
 MonoBehaviour:

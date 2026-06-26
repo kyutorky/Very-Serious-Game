@@ -20,7 +20,9 @@ public class InGameDevConsole : MonoBehaviour
     [SerializeField] TMP_Text overlay;
     [SerializeField] GameObject sfxPanel;
     [SerializeField] GameObject sfxSliderPrefab;
+    [SerializeField] GameObject sfxButtonPrefab;
     [SerializeField] List<Slider> sfxSliders;
+    [SerializeField] List<Button> sfxButtons;
     DevCommandRegistry cmdRegistry;
     GameData gameData;
     SFXController sfxController;
@@ -151,14 +153,30 @@ public class InGameDevConsole : MonoBehaviour
         for (int i = 0; i < sfxController.sources.Count; i++)
         {
             GameObject slider = GameObject.Instantiate(sfxSliderPrefab);
+            GameObject button = GameObject.Instantiate(sfxButtonPrefab);
             if (slider == null)
             {
                 Debug.Log("SFX slider is null");
             }
             slider.transform.SetParent(sfxPanel.transform, false);
             slider.transform.localPosition = new Vector3(0, -i * 30 - 20, 0);
+            button.transform.SetParent(sfxPanel.transform, false);
+            button.transform.localPosition = new Vector3(-100, -i * 30 - 20, 0);
             sfxSliders.Add(slider.GetComponent<Slider>());
+            sfxButtons.Add(button.GetComponent<Button>());
+            int index = i;
+            button.GetComponent<Button>().onClick.AddListener(() => OnSFXClipPlay(index));
         }
+
+    }
+    public void OnSFXClipPlay(int i)
+    {
+        if (i != 0)
+        {
+            Main.Instance.sfxController.sources[i].Stop();
+            Main.Instance.sfxController.sources[i].PlayOneShot(Main.Instance.sfxController.sources[i].clip);
+        }
+
     }
     public void ReadSFXSliderValues()
     {
@@ -175,4 +193,5 @@ public class InGameDevConsole : MonoBehaviour
 
         }
     }
+
 }

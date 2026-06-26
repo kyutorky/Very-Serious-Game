@@ -18,6 +18,7 @@ public class DeathZoneHandler : MonoBehaviour
         {
             // Bypass the broken OnGameoverLoad check by running the working coroutine directly
             var controller = Main.Instance.gameSceneController;
+            Main.Instance.sfxController.sources[9].PlayOneShot(Main.Instance.sfxController.sources[9].clip);
             Main.Instance.StartCoroutine(Main.Instance.TransitionScenes(controller.current, controller.gameoverScenes));
         }
         else

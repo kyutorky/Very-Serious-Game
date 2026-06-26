@@ -80,12 +80,12 @@ public class DungBall : MonoBehaviour
 
         Debug.Log($"Wall hit at speed: {impactSpeed}");
 
-        if (impactSpeed > 2f)
+        if (impactSpeed > 4f)
         {
             Main.Instance.gameData.playerData.score -=
                 Mathf.RoundToInt(impactSpeed);
             sfxController.sources[2].Play();
-            OnLosePointsOnImpact(impactSpeed * 10);
+            OnLosePointsOnImpact(500);
         }
     }
 
@@ -95,10 +95,18 @@ public class DungBall : MonoBehaviour
         {
             OnWaterSplash();
         }
+        if (collision.gameObject.tag.Equals("ScorePickup"))
+        {
+            Object.Destroy(collision.gameObject);
+            sfxController.sources[3].pitch = 1.5f;
+            sfxController.sources[3].Play();
+            Main.Instance.gameData.playerData.score += 1000;
+        }
     }
     public void OnLosePointsOnImpact(float val)
     {
         Main.Instance.gameData.playerData.score -= val;
+        sfxController.sources[3].pitch = 0.5f;
         sfxController.sources[3].Play();
         vfxImpact.Emit(30);
     }
