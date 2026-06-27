@@ -78,18 +78,30 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        animator.SetBool("isJumping", !IsGrounded());
+
         playerData.score = Mathf.Clamp(playerData.score, 0, 100000);
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
 
         if (moveValue != Vector2.zero)
         {
-            animator.SetBool("isWalking", true);
+            if (IsGrounded()) animator.SetBool("isWalking", true);
             animator.SetFloat("xInput", moveValue.x);
             animator.SetFloat("xInput", moveValue.y);
+            if (rb.linearVelocityX > 0)
+            {
+                animator.SetBool("isMovingRight", true);
+            }
+            else if (rb.linearVelocityX < 0)
+            {
+                animator.SetBool("isMovingLeft", true);
+            }
         }
         else
         {
             animator.SetBool("isWalking", false);
+            animator.SetBool("isMovingLeft", false);
+            animator.SetBool("isMovingRight", false);
         }
         if (sprintAction.IsPressed())   //added by white to allow player dash movement to work in the air
         {
@@ -119,6 +131,7 @@ public class Player : MonoBehaviour
 
         if (jumpAction.WasPressedThisFrame() && IsGrounded())
         {
+            animator.SetBool("isJumping", true);
             Jump();
         }
 
@@ -160,6 +173,7 @@ public class Player : MonoBehaviour
     }
     bool IsGrounded()
     {
+
         return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
     }
     bool IsNearBall()

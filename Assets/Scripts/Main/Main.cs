@@ -32,7 +32,7 @@ public class Main : MonoBehaviour
             gameSceneController = new GameSceneController();
             sfxController = new SFXController(sfxSourcesGO);
             gameSceneController.Initialize(gameData);
-            StartCoroutine(gameSceneController.LoadScenes(new List<string>(), gameSceneController.persistentScenes));
+            //StartCoroutine(gameSceneController.LoadScenes(new List<string>(), gameSceneController.persistentScenes));
             StartCoroutine(gameSceneController.LoadScenes(new List<string>(), gameSceneController.mainmenuScenes));
             cmdRegistry.AddCommand(new DevCommand("Reset Game", "restart", OnGameReset));
             cmdRegistry.AddCommand(new DevCommand("loadmainmenu", "loadmainmenu", OnMainmenuLoad));

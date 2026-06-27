@@ -158,6 +158,19 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+  aimAction:
+    m_Name: Aim
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 02697ab6-c55a-4ce3-bd68-1dc290cd69ae
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  useInspectorValues: 0
+  walkSpeedOverride: 6
+  dashSpeedOverride: 12
+  jumpHeightOverride: 5
   groundCheck: {fileID: 834098747084165485}
   groundCheckRadius: 0.2
   groundMask:
@@ -175,6 +188,8 @@ MonoBehaviour:
   chargeScale: -63
   maxChargeTime: -61.3
   chargeMeter: {fileID: 0}
+  aimVector: {x: 0, y: 0}
+  aimRadius: 0
 --- !u!95 &3724320795913387027
 Animator:
   serializedVersion: 7
