@@ -82,8 +82,6 @@ public class DungBall : MonoBehaviour
 
         if (impactSpeed > 4f)
         {
-            Main.Instance.gameData.playerData.score -=
-                Mathf.RoundToInt(impactSpeed);
             sfxController.sources[2].Play();
             OnLosePointsOnImpact(500);
         }
@@ -113,6 +111,8 @@ public class DungBall : MonoBehaviour
     public void OnWaterSplash()
     {
         Main.Instance.gameData.playerData.score -= 100;
+        sfxController.sources[3].pitch = 1.5f;
+        sfxController.sources[3].Play();
         sfxController.sources[5].Play();
         vfxWaterSplash.Emit(10);
     }

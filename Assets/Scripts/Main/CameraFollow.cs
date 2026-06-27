@@ -9,7 +9,7 @@ public class CameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
-        offset = new Vector3(0, 0, zOffset);
+        offset = new Vector3(0, 3, zOffset);
         if (!target) return;
 
         Vector3 desiredPos = target.position + offset;

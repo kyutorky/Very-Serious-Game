@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ public class GameoverUIController : MonoBehaviour
     [SerializeField] AudioSource audio;
     [SerializeField] AudioClip clickSFX;
     [SerializeField] Button button;
+    [SerializeField] TMP_Text message;
 
     void Start()
     {
@@ -25,6 +27,7 @@ public class GameoverUIController : MonoBehaviour
             Debug.Log("No Restart Button for GameoverUIController.");
         }
         audio.clip = clickSFX;
+        message.text = $"Game Over\nScore: {main.gameData.playerData.score}";
     }
 
     public void OnButtonPressed()

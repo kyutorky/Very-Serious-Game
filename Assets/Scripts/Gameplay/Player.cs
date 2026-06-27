@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-        playerData.score = Mathf.Clamp(playerData.score, 0, 10000);
+        playerData.score = Mathf.Clamp(playerData.score, 0, 100000);
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
 
         if (moveValue != Vector2.zero)
